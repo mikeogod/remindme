@@ -1,4 +1,6 @@
 <?php
 ob_start();
 ?>
-<p>This site is under development by Mike Xie</p>
+<div id="footer" class="navbar navbar-inverse">
+
+</div>

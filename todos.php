@@ -21,7 +21,7 @@ catch (PDOException $ex)
 $empty_table=false;
 
 $table_head="
-<table>
+<table class='table'>
   <thead>
     <tr>
       <th>Title</th>
@@ -46,7 +46,7 @@ foreach($result as $todo)
 	}
 	$table_body.="<td style='text-align:center;'>".$todo["title"]."</td>";
 	$table_body.="<td>".$todo["description"]."</td>";
-	$table_body.="<td><button class='change'>change</button>  <button href='#' class='delete'>delete</button>  <button href='#' class='save'>save</button>";
+	$table_body.="<td><button class='change btn btn-info'>change</button>  <button href='#' class='delete btn btn-danger'>delete</button>  <button href='#' class='save btn btn-primary'>save</button>";
 	$table_body.="</tr>";
 }
 
@@ -78,11 +78,11 @@ else
   var rowNum={value:0};
   $(document).ready(function(){
 	$(".save").hide();
-  	$("#todos table tbody").sortable({
+  	$("#todos-container table tbody").sortable({
   	  	axis:"y",
   	  	cursor:"move",
-		cancel:"#todos table thead tr",
-		containment:"#todos table",
+		cancel:"#todos-container table thead tr",
+		containment:"#todos-container table",
 		delay: 150,
 		revert:"200",
 		helper:fixHelper,
@@ -91,16 +91,16 @@ else
   	});
 
   	//Add
-	$("#add_form").hide();
+	$("#add_form_container").hide();
 	$("#add_toggle").on("click", function(){
-	  $("#add_form").slideToggle(function(){
-		  if($("#add_form").css("display")=="none")
+	  $("#add_form_container").slideToggle(function(){
+		  if($("#add_form_container").css("display")=="none")
 		  {
-			  $("#add_toggle").button("option", "label", "Add a new to-do item");
+			  $("#add_toggle").html("Add New");
 		  }
 		  else
 		  {
-			  $("#add_toggle").button("option", "label", "Fold this");
+			  $("#add_toggle").html("Fold This");
 		  }
 	  });
 	  
@@ -124,7 +124,7 @@ else
   	  });
 
 	  
-	  $("#todos table tbody tr").each(function(){
+	  $("#todos-container table tbody tr").each(function(){
 		  $(this).find("td:last-Child").find(".change").on("click", function(e){
 			  var title=$(this).parent().parent().find("td:first-Child").html();
 			  var desc=$(this).parent().parent().find("td:first-Child").next().html();
@@ -155,14 +155,14 @@ else
 				dataType: "text",
 				success: function(data, textStatus, jqXHR){
 					var invisibleRows=new Array();
-					$("#todos table tbody tr").each(function(i, row){
+					$("#todos-container table tbody tr").each(function(i, row){
 						if($(row).css("display")!=='undefined' && $(row).css("display")==="none")
 						{
 							invisibleRows.push(row);
 						}
 					});
 					
-					var allRows=$("#todos table tbody tr").not(invisibleRows);
+					var allRows=$("#todos-container table tbody tr").not(invisibleRows);
 					
 					for(var i=0; i!=allRows.length; i++)
 					{
@@ -180,7 +180,7 @@ else
 		  		    alert("fail: "+textStatus+" "+errorThrown+" "+jqXHR.responseText);
 		  	    },
 		  	    complete: function(jqXHR, textStatus){
-					var allRows=$("#todos table tbody tr");
+					var allRows=$("#todos-container table tbody tr");
 			  	    for(var i=0; i!=allRows.length; i++)
 			  	    {
 				  	    if(allRows[i].getAttribute("row")>currentRow[0].getAttribute("row"))
@@ -245,7 +245,7 @@ else
 	var old_priority=rowNum.value-1;
 	var new_priority;
 
-	var allRows=$("#todos table tbody tr");
+	var allRows=$("#todos-container table tbody tr");
 	for(var i=0; i!=allRows.length; i++)
 	{
 	  if(allRows[i].getAttribute("row")==rowNum.value)
@@ -287,37 +287,59 @@ else
 
   };
 </script>
-<div id="add">
-	<button id="add_toggle" href="#">Add a new to-do item</button>
-	<div id="add_form_container">
-	  <form id="add_form" action="todosManage.php" method="post">
-	    <input type="text" name="title" placeholder="Write the title here..."/><br />
-	  	<textarea name="description" rows="5" cols="50" maxlength="1000" placeholder="Write the description here..."></textarea><br />
-	  	<input type="text" name="action" value="add" hidden />
-	  	<input type="submit" id="add" name="add" value="add a new item" />
-	  </form>
+
+<div id="todos-container">
+	<div id="add">
+		
+		<div class="panel panel-default" id="add_form_container">
+			<div class="panel-body">
+			  <form id="add_form" class="form-horizontal" role="form" action="todosManage.php" method="post">
+			    <div class="form-group">
+			    	<label for="title" class="col-sm-2 control-label">Title</label>
+			    	<div class="col-sm-8">
+			    	<input id="title" class="form-control" type="text" name="title" placeholder="Write the title here..."/>
+			    	</div>
+			  	</div>
+			  	<div class="form-group">
+			  		<label for="description" class="col-sm-2 control-label">Detail</label>
+			  		<div class="col-sm-8">
+			  			<textarea class="form-control" name="description" rows="5" cols="50" maxlength="1000" placeholder="Write the description here..."></textarea>
+			  		</div>
+			  	</div>
+			  	<input type="text" name="action" value="add" hidden />
+			  	<div class="form-group">
+			  		
+			  		<div class="col-sm-offset-2 col-sm-8">
+			  			<input id="add-btn" class="btn btn-primary" name="add" type="submit"  value="Submit" />
+			  		</div>
+			  	</div>
+			  </form>
+		    </div>
+		</div>
+	</div>
+	<div id="email_notification_container">
+	  <?php if($_SESSION["user_remindme"]["email_enabled"]===true): ?>
+	<!--   <p>You have enabled email notification</p> -->
+	<!--   <p>You set the time to:</p> -->
+	  <p><?php echo $_SESSION["email_time"] ?></p>
+	<!--   <input type="button" id="disable_email" name="disable_email" value="Disable" /> -->
+	  <?php else: ?>
+	<!--   <p>You have not enabled email notification</p> -->
+	<!--   <p>You can enable it here</p> -->
+	<!--   <form action="index.php" method="post"> -->
+	<!--     <input type="time" name="time" required /> -->
+	<!--     <input type="button" id="enable_email" name="enable_email" value="Enable" /> -->
+	<!--   </form> -->
+	  <?php endif; ?>
+	</div>
+	<div class="table_container panel panel-default">
+	<?php
+		echo $table_head;
+		echo $table_body;
+		echo $table_tail;
+	?>
 	</div>
 </div>
-<div id="email_notification_container">
-  <?php if($_SESSION["user_remindme"]["email_enabled"]===true): ?>
-<!--   <p>You have enabled email notification</p> -->
-<!--   <p>You set the time to:</p> -->
-  <p><?php echo $_SESSION["email_time"] ?></p>
-<!--   <input type="button" id="disable_email" name="disable_email" value="Disable" /> -->
-  <?php else: ?>
-<!--   <p>You have not enabled email notification</p> -->
-<!--   <p>You can enable it here</p> -->
-<!--   <form action="index.php" method="post"> -->
-<!--     <input type="time" name="time" required /> -->
-<!--     <input type="button" id="enable_email" name="enable_email" value="Enable" /> -->
-<!--   </form> -->
-  <?php endif; ?>
-</div>
-<div class="table_container">
-<?php
-	echo $table_head;
-	echo $table_body;
-	echo $table_tail;
-?>
-</div>
+
+
 

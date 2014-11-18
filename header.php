@@ -3,20 +3,34 @@ ob_start();
 ?>
 <?php if(!isset($_SESSION["user_remindme"])): ?>
   <div class="navbar navbar-inverse">
-  
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">
+        RemindMe
+      </a>
+    </div>
     <form class="navbar-form navbar-left" action="index.php" method="post">
       <div class="form-group">
-      <input class="form-control" type="text" name="username" placeholder="user name:" /><br />
+      	<input class="form-control" type="text" name="username" placeholder="user name" /><br />
       </div>
-      <input class="form-control" type="password" name="password" placeholder="password" /><br />
-      <input class="form-control" type="password" name="password_again" placeholder="password again" /><br />
-      <input class="form-control" type="email" name="email" placeholder="email" /><br />
-      <input type="submit" name="register" value="Register!" /><br />
+      <div class="form-group">
+      	<input class="form-control" type="password" name="password" placeholder="password" /><br />
+      </div>
+      <div class="form-group">
+      	<input class="form-control" type="password" name="password_again" placeholder="password again" /><br />
+      </div>
+      <div class="form-group">
+      	<input class="form-control" type="email" name="email" placeholder="email" /><br />
+      </div>
+      <input class="btn btn-primary" type="submit" name="register" value="Register!" /><br />
     </form>
-    <form class="navbar-form" action="index.php" method="post">
-      <label>user name: </label><input type="text" name="username"/><br />
-      <label>password: </label><input type="password" name="password" /><br />
-      <input type="submit" name="login" value="Login!" /><br />
+    <form class="navbar-form navbar-left" action="index.php" method="post">
+      <div class="form-group">
+        <input class="form-control" type="text" name="username" placeholder="user name"/><br />
+      </div>
+      <div class="form-group">
+      	<input class="form-control" type="password" name="password" placeholder="password" /><br />
+      </div>
+      <input class="btn btn-primary" type="submit" name="login" value="Login!" /><br />
     </form>
   </div>
 <?php else: ?>
@@ -29,9 +43,21 @@ ob_start();
 <!--       <input type="submit" name="change_email" value="submit" /><br /> -->
 <!--     </form> -->
 <!--   </div> -->
-  <div id="logout">
-    <form action="index.php" method="post">
-      <input type="submit" name="logout" value="Logout!" />
-    </form>
+  <div class="navbar navbar-inverse">
+    <div class="navbar-fluid">
+    	<div class="navbar-header">
+	      <a class="navbar-brand" href="#">
+	        RemindMe
+	      </a>
+	    </div>
+	    <button id="add_toggle" class="btn btn-success navbar-btn narvar-left">Add New</button>
+	    <div id="logout">
+	      <form class="navbar-form navbar-right" action="index.php" method="post">
+	        <div class="form-group">
+	          <input class="btn btn-primary" type="submit" name="logout" value="Logout!" />
+	        </div>
+	      </form>
+	    </div>
+    </div>
   </div>
 <?php endif; ?>

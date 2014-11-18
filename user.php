@@ -113,7 +113,7 @@ if(!empty($_POST))
 		
 		$user=$result;
 		$_SESSION["user_remindme"]=$user;
-		$notification="You have logged in! Enjoy!";	
+		$notification="Hello ".$user['username'];	
 	}
 	else if(isset($_POST["logout"]))
 	{
